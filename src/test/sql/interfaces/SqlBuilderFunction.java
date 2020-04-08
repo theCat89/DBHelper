@@ -3,7 +3,7 @@ package sql.interfaces;
 import java.util.concurrent.Callable;
 
 @FunctionalInterface
-public interface SqlBuilderConsumer {
+public interface SqlBuilderFunction {
 
     Callable<String> prepareSqlString(SqlSelectBuilder builder);
 
