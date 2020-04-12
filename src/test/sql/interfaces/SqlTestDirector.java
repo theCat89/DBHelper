@@ -11,4 +11,8 @@ public class SqlTestDirector {
     static Callable<String> buildSelectSimpleSqlWithFields(SqlSelectBuilder builder){
         return builder.select("field1", "field2").from("tableName")::build;
     }
+
+    static Callable<String> buildSelectAllSimpleSql(SqlSelectBuilder builder) {
+        return builder.selectAll("tableName")::build;
+    }
 }
