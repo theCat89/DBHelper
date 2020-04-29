@@ -1,9 +1,7 @@
-package sql.impl;
+package sql.dml.impl;
 
-import sql.interfaces.SqlFinalBuilder;
-import sql.interfaces.SqlSelectBuilder;
-
-import java.util.Optional;
+import sql.dml.interfaces.SqlFinalBuilder;
+import sql.dml.interfaces.SqlSelectBuilder;
 
 import static java.util.stream.Stream.of;
 

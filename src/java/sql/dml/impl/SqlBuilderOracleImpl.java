@@ -1,4 +1,4 @@
-package sql.impl;
+package sql.dml.impl;
 
 import java.util.Arrays;
 

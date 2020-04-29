@@ -1,7 +1,7 @@
-package sql.interfaces;
+package sql.dml.interfaces;
 
 import org.junit.jupiter.api.Test;
-import sql.impl.SqlBuilderPostgreImpl;
+import sql.dml.impl.SqlBuilderPostgreImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,4 +1,4 @@
-package sql.interfaces;
+package sql.dml.interfaces;
 
 import java.util.concurrent.Callable;
 
