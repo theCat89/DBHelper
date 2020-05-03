@@ -13,6 +13,10 @@ public class SqlTestDirector {
     }
 
     static Callable<String> buildSelectAllSimpleSql(SqlSelectBuilder builder) {
-        return builder.selectAll("tableName")::build;
+        return builder.selectAll().from("tableName")::build;
+    }
+
+    static Callable<String> buildSimpleWhereStatement(SqlSelectBuilder builder) {
+        return builder.select("field1").from("tableName").where("field2 = 1")::build;
     }
 }
