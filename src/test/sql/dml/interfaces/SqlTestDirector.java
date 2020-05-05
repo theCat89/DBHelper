@@ -1,5 +1,7 @@
 package sql.dml.interfaces;
 
+import sql.operators.ComparisonOperators;
+
 import java.util.concurrent.Callable;
 
 public class SqlTestDirector {
@@ -18,5 +20,9 @@ public class SqlTestDirector {
 
     static Callable<String> buildSimpleWhereStatement(SqlSelectBuilder builder) {
         return builder.select("field1").from("tableName").where("field2 = 1")::build;
+    }
+
+    static Callable<String> buildWhereWithOperatorStatement(SqlSelectBuilder builder) {
+        return builder.select("field1").from("tableName").where("field2", ComparisonOperators.equals, "1")::build;
     }
 }

@@ -27,6 +27,11 @@ class SqlSelectBuilderTest {
         validation("SELECT field1 FROM tableName WHERE field2 = 1", SqlTestDirector::buildSimpleWhereStatement, new SqlBuilderPostgreImpl());
     }
 
+    @Test
+    public void testWhereWithComparisonOperator() {
+        validation("SELECT field1 FROM tableName WHERE field2 = 1", SqlTestDirector::buildWhereWithOperatorStatement, new SqlBuilderPostgreImpl());
+    }
+
     public void validation(String str, SqlBuilderFunction testingMethod, SqlSelectBuilder testingBuilder){
         try {
             assertEquals(str, testingMethod.prepareSqlString(testingBuilder).call());

@@ -4,6 +4,7 @@ import sql.dml.interfaces.SqlFinalBuilder;
 import sql.dml.interfaces.SqlFromBuilder;
 import sql.dml.interfaces.SqlSelectBuilder;
 import sql.dml.interfaces.SqlWhereBuilder;
+import sql.operators.ComparisonOperators;
 
 import java.util.Arrays;
 
@@ -36,9 +37,13 @@ public class SqlBuilderPostgreImpl implements SqlSelectBuilder, SqlFinalBuilder,
         return this;
     }
 
-    @Override
     public SqlFinalBuilder where(String clause) {
         sqlQuery.append(" WHERE ").append(clause);
+        return this;
+    }
+
+    public SqlFinalBuilder where(String lValue, ComparisonOperators operator, String rValue) {
+        sqlQuery.append(" WHERE ").append(lValue).append(operator.getOperator()).append(rValue);
         return this;
     }
 
