@@ -47,6 +47,11 @@ public class SqlBuilderPostgreImpl implements SqlSelectBuilder, SqlFinalBuilder,
         return this;
     }
 
+    public SqlFinalBuilder whereExists(SqlFinalBuilder query) {
+        sqlQuery.append(" WHERE").append(" EXISTS").append(" (").append(query.build()).append(")");
+        return this;
+    }
+
     public String build(){
         return sqlQuery.toString();
     }

@@ -32,6 +32,12 @@ class SqlSelectBuilderTest {
         validation("SELECT field1 FROM tableName WHERE field2 = 1", SqlTestDirector::buildWhereWithOperatorStatement, new SqlBuilderPostgreImpl());
     }
 
+    @Test
+    public void testWhereExists() {
+        validation("SELECT * FROM table1 WHERE EXISTS (SELECT * FROM table2 WHERE field2 = 5)", SqlTestDirector::buildWhereExists, new SqlBuilderPostgreImpl() {
+        });
+    }
+
     public void validation(String str, SqlBuilderFunction testingMethod, SqlSelectBuilder testingBuilder){
         try {
             assertEquals(str, testingMethod.prepareSqlString(testingBuilder).call());
