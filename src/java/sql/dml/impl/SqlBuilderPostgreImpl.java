@@ -9,6 +9,7 @@ import sql.operators.ComparisonOperators;
 import java.util.Arrays;
 
 import static java.util.stream.Stream.of;
+import static sql.constants.QueryConstants.*;
 
 /**
  * Spaces on start, keywords - UPPER_CASE
@@ -18,13 +19,13 @@ public class SqlBuilderPostgreImpl implements SqlSelectBuilder, SqlFinalBuilder,
     private StringBuilder sqlQuery = new StringBuilder();
 
     public SqlBuilderPostgreImpl select(String... params) {
-        sqlQuery.append("SELECT ");
+        sqlQuery.append(SELECT);
         if (Arrays.asList(params).isEmpty()) {
-            sqlQuery.append("* ");
+            sqlQuery.append(STAR);
             return this;
         }
-        of(params).reduce((String s1, String s2) -> s1 + ", " + s2).ifPresent(s -> sqlQuery.append(s));
-        sqlQuery.append(" ");
+        of(params).reduce((String s1, String s2) -> s1 + COMMA + s2).ifPresent(s -> sqlQuery.append(s));
+        sqlQuery.append(SPACE);
         return this;
     }
 
@@ -33,26 +34,26 @@ public class SqlBuilderPostgreImpl implements SqlSelectBuilder, SqlFinalBuilder,
     }
 
     public SqlBuilderPostgreImpl from(String tableName){
-        sqlQuery.append("FROM ").append(tableName);
+        sqlQuery.append(FROM).append(tableName).append(SPACE);
         return this;
     }
 
     public SqlFinalBuilder where(String clause) {
-        sqlQuery.append(" WHERE ").append(clause);
+        sqlQuery.append(WHERE).append(clause);
         return this;
     }
 
     public SqlFinalBuilder where(String lValue, ComparisonOperators operator, String rValue) {
-        sqlQuery.append(" WHERE ").append(lValue).append(operator.getOperator()).append(rValue);
+        sqlQuery.append(WHERE).append(lValue).append(operator.getOperator()).append(rValue);
         return this;
     }
 
     public SqlFinalBuilder whereExists(SqlFinalBuilder query) {
-        sqlQuery.append(" WHERE").append(" EXISTS").append(" (").append(query.build()).append(")");
+        sqlQuery.append(WHERE).append(EXISTS).append("(").append(query.build()).append(")");
         return this;
     }
 
     public String build(){
-        return sqlQuery.toString();
+        return sqlQuery.toString().trim();
     }
 }

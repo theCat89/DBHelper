@@ -1,6 +1,7 @@
 package sql.dml.interfaces;
 
 import org.junit.jupiter.api.Test;
+import sql.SqlBuilderFunction;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static sql.SqlBuilders.getPostgresSqlSelectBuilder;
@@ -24,21 +25,20 @@ class SqlSelectBuilderTest {
 
     @Test
     public void testSimpleWhere() {
-        validation("SELECT field1 FROM tableName WHERE field2 = 1", SqlTestDirector::buildSimpleWhereStatement, new SqlBuilderPostgreImpl());
+        validation("SELECT field1 FROM tableName WHERE field2 = 1", SqlTestDirector::buildSimpleWhereStatement, getPostgresSqlSelectBuilder());
     }
 
     @Test
     public void testWhereWithComparisonOperator() {
-        validation("SELECT field1 FROM tableName WHERE field2 = 1", SqlTestDirector::buildWhereWithOperatorStatement, new SqlBuilderPostgreImpl());
+        validation("SELECT field1 FROM tableName WHERE field2 = 1", SqlTestDirector::buildWhereWithOperatorStatement, getPostgresSqlSelectBuilder());
     }
 
     @Test
     public void testWhereExists() {
-        validation("SELECT * FROM table1 WHERE EXISTS (SELECT * FROM table2 WHERE field2 = 5)", SqlTestDirector::buildWhereExists, new SqlBuilderPostgreImpl() {
-        });
+        validation("SELECT * FROM table1 WHERE EXISTS (SELECT * FROM table2 WHERE field2 = 5)", SqlTestDirector::buildWhereExists, getPostgresSqlSelectBuilder());
     }
 
-    public void validation(String str, SqlBuilderFunction testingMethod, SqlSelectBuilder testingBuilder){
+    public void validation(String str, SqlBuilderFunction<SqlSelectBuilder> testingMethod, SqlSelectBuilder testingBuilder){
         try {
             assertEquals(str, testingMethod.prepareSqlString(testingBuilder).call());
         } catch (Exception e) {
