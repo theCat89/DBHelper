@@ -23,6 +23,11 @@ class SqlDDLQueryBuilderTest {
         validation("CREATE TABLE my_table (field1 NUMBER(5) NOT NULL CONSTRAINT field1 PRIMARY KEY)", SqlDDLTestDirector::buildCreateOneFieldTableWithConstraint, new SqlDDLOracleQueryBuilder());
     }
 
+    @Test
+    public void testCreateAs(){
+        validation("CREATE TABLE my_table AS SELECT * FROM your_table", SqlDDLTestDirector::buildCreateAs, new SqlDDLOracleQueryBuilder());
+    }
+
     public void validation(String str, SqlBuilderFunction<SqlDDLQueryBuilder> testingMethod, SqlDDLQueryBuilder testingBuilder){
         try {
             assertEquals(str, testingMethod.prepareSqlString(testingBuilder).call());

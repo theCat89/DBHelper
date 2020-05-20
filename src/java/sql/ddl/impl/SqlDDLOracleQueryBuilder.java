@@ -4,14 +4,17 @@ import sql.ddl.interfaces.SqlAlterQueryBuilder;
 import sql.ddl.interfaces.SqlCreateQueryBuilder;
 import sql.ddl.interfaces.SqlDDLQueryBuilder;
 import sql.ddl.interfaces.SqlDropQueryBuilder;
+import sql.ddl.interfaces.table.SqlAsTableQueryBuilder;
 import sql.ddl.interfaces.table.SqlTableQueryBuilder;
+import sql.dml.interfaces.SqlFinalBuilder;
 
 import java.util.LinkedList;
 import java.util.ListIterator;
 
 import static sql.constants.QueryConstants.*;
 
-public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQueryBuilder, SqlCreateQueryBuilder, SqlAlterQueryBuilder, SqlDropQueryBuilder {
+public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQueryBuilder,
+        SqlCreateQueryBuilder, SqlAlterQueryBuilder, SqlDropQueryBuilder, SqlAsTableQueryBuilder {
 
     private StringBuilder sqlQuery = new StringBuilder();
     private LinkedList<ColumnDefinition> columns = new LinkedList<>();
@@ -73,6 +76,12 @@ public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQue
     }
 
     @Override
+    public SqlAsTableQueryBuilder as(SqlFinalBuilder query) {
+        sqlQuery.append("AS ").append(query.build());
+        return this;
+    }
+
+    @Override
     public String build() {
         if(!columns.isEmpty()) {
             buildColumns();
@@ -96,5 +105,11 @@ public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQue
         }
 
         columns.clear();
+    }
+
+    @Override
+    public SqlFinalBuilder withNoData() {
+        sqlQuery.append(" WITH NO DATA");
+        return this;
     }
 }
