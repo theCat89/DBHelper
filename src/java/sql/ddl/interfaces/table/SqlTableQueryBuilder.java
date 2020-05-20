@@ -6,9 +6,7 @@ public interface SqlTableQueryBuilder {
 
     SqlTableQueryBuilder addColumn(String name, String type, String constraint);
 
-    SqlTableQueryBuilder primaryKey(String name);
-
-    SqlTableQueryBuilder constraint(String name);
+    SqlTableQueryBuilder constraint(String expression);
 
     SqlTableQueryBuilder tablespace(String name);
 
