@@ -16,8 +16,8 @@ import static sql.constants.QueryConstants.*;
 public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQueryBuilder,
         SqlCreateQueryBuilder, SqlAlterQueryBuilder, SqlDropQueryBuilder, SqlAsTableQueryBuilder {
 
-    private StringBuilder sqlQuery = new StringBuilder();
-    private LinkedList<ColumnDefinition> columns = new LinkedList<>();
+    private final StringBuilder sqlQuery = new StringBuilder();
+    private final LinkedList<ColumnDefinition> columns = new LinkedList<>();
 
     @Override
     public SqlTableQueryBuilder table(String scheme, String table) {
