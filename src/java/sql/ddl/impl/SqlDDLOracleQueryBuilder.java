@@ -56,6 +56,12 @@ public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQue
     }
 
     @Override
+    public SqlTableQueryBuilder addColumn(String name, String type) {
+        columns.add(new ColumnDefinition(name, type));
+        return this;
+    }
+
+    @Override
     public SqlTableQueryBuilder constraint(String expression) {
         if(!columns.isEmpty()) {
             buildColumns();
@@ -92,18 +98,13 @@ public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQue
 
     private void buildColumns(){
         sqlQuery.append("(");
-        sqlQuery.append(columns.getFirst().getName()).append(SPACE);
-        sqlQuery.append(columns.getFirst().getType()).append(SPACE);
-        sqlQuery.append(columns.getFirst().getConstraint());
+        sqlQuery.append(columns.getFirst().getColumnQuery());
         ListIterator<ColumnDefinition> iterator = columns.listIterator(1);
         while (iterator.hasNext()){
             ColumnDefinition next = iterator.next();
             sqlQuery.append(COMMA);
-            sqlQuery.append(next.getName()).append(SPACE);
-            sqlQuery.append(next.getType()).append(SPACE);
-            sqlQuery.append(next.getConstraint());
+            sqlQuery.append(next.getColumnQuery());
         }
-
         columns.clear();
     }
 
