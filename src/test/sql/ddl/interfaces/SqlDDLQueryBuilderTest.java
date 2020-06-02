@@ -19,6 +19,11 @@ class SqlDDLQueryBuilderTest {
     }
 
     @Test
+    public void testSimpleCreateWithTwoField(){
+        validation("CREATE TABLE my_table (field1 NUMBER(5) NOT NULL, field2 NUMBER(10))", SqlDDLTestDirector::buildCreateTwoFieldTable, new SqlDDLOracleQueryBuilder());
+    }
+
+    @Test
     public void testSimpleCreateOneFieldConstraint(){
         validation("CREATE TABLE my_table (field1 NUMBER(5) NOT NULL CONSTRAINT field1 PRIMARY KEY)", SqlDDLTestDirector::buildCreateOneFieldTableWithConstraint, new SqlDDLOracleQueryBuilder());
     }
