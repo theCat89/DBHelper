@@ -16,7 +16,7 @@ import static sql.constants.QueryConstants.*;
 public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQueryBuilder,
         SqlCreateQueryBuilder, SqlAlterQueryBuilder, SqlDropQueryBuilder, SqlAsTableQueryBuilder {
 
-    private final StringBuilder sqlQuery = new StringBuilder();
+    private StringBuilder sqlQuery;
     private final LinkedList<ColumnDefinition> columns = new LinkedList<>();
 
     @Override
@@ -33,6 +33,7 @@ public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQue
 
     @Override
     public SqlCreateQueryBuilder create() {
+        sqlQuery = new StringBuilder();
         sqlQuery.append(CREATE);
         return this;
     }
