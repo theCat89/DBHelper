@@ -16,7 +16,7 @@ import static sql.constants.QueryConstants.*;
  */
 public class SqlBuilderPostgreImpl implements SqlSelectBuilder, SqlFinalBuilder, SqlFromBuilder, SqlWhereBuilder {
 
-    private StringBuilder sqlQuery = new StringBuilder();
+    private final StringBuilder sqlQuery = new StringBuilder();
 
     public SqlBuilderPostgreImpl select(String... params) {
         sqlQuery.append(SELECT);
@@ -24,7 +24,7 @@ public class SqlBuilderPostgreImpl implements SqlSelectBuilder, SqlFinalBuilder,
             sqlQuery.append(STAR);
             return this;
         }
-        of(params).reduce((String s1, String s2) -> s1 + COMMA + s2).ifPresent(s -> sqlQuery.append(s));
+        of(params).reduce((String s1, String s2) -> s1 + COMMA + s2).ifPresent(sqlQuery::append);
         sqlQuery.append(SPACE);
         return this;
     }
