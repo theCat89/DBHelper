@@ -5,6 +5,7 @@ import sql.ddl.interfaces.SqlCreateQueryBuilder;
 import sql.ddl.interfaces.SqlDDLQueryBuilder;
 import sql.ddl.interfaces.SqlDropQueryBuilder;
 import sql.ddl.interfaces.table.SqlAsTableQueryBuilder;
+import sql.ddl.interfaces.table.SqlInColumnStructureBuilder;
 import sql.ddl.interfaces.table.SqlTableQueryBuilder;
 import sql.dml.interfaces.SqlFinalBuilder;
 
@@ -14,56 +15,57 @@ import java.util.ListIterator;
 import static sql.constants.QueryConstants.*;
 
 public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQueryBuilder,
-        SqlCreateQueryBuilder, SqlAlterQueryBuilder, SqlDropQueryBuilder, SqlAsTableQueryBuilder {
+        SqlCreateQueryBuilder, SqlAlterQueryBuilder, SqlDropQueryBuilder, SqlAsTableQueryBuilder,
+        SqlInColumnStructureBuilder {
 
     private StringBuilder sqlQuery;
     private final LinkedList<ColumnDefinition> columns = new LinkedList<>();
 
     @Override
-    public SqlTableQueryBuilder table(String scheme, String table) {
+    public SqlDDLOracleQueryBuilder table(String scheme, String table) {
         sqlQuery.append(scheme).append(DOT).append(table).append(SPACE);
         return this;
     }
 
     @Override
-    public SqlTableQueryBuilder table(String table) {
+    public SqlDDLOracleQueryBuilder table(String table) {
         sqlQuery.append(TABLE).append(table).append(SPACE);
         return this;
     }
 
     @Override
-    public SqlCreateQueryBuilder create() {
+    public SqlDDLOracleQueryBuilder create() {
         sqlQuery = new StringBuilder();
         sqlQuery.append(CREATE);
         return this;
     }
 
     @Override
-    public SqlAlterQueryBuilder alter() {
+    public SqlDDLOracleQueryBuilder alter() {
         sqlQuery.append(ALTER);
         return this;
     }
 
     @Override
-    public SqlDropQueryBuilder drop() {
+    public SqlDDLOracleQueryBuilder drop() {
         sqlQuery.append(DROP);
         return this;
     }
 
     @Override
-    public SqlTableQueryBuilder addColumn(String name, String type, String constraint) {
+    public SqlDDLOracleQueryBuilder addColumn(String name, String type, String constraint) {
         columns.add(new ColumnDefinition(name, type, constraint));
         return this;
     }
 
     @Override
-    public SqlTableQueryBuilder addColumn(String name, String type) {
+    public SqlDDLOracleQueryBuilder addColumn(String name, String type) {
         columns.add(new ColumnDefinition(name, type));
         return this;
     }
 
     @Override
-    public SqlTableQueryBuilder constraint(String expression) {
+    public SqlDDLOracleQueryBuilder constraint(String expression) {
         if(!columns.isEmpty()) {
             buildColumns();
             sqlQuery.append(SPACE);
@@ -73,7 +75,7 @@ public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQue
     }
 
     @Override
-    public SqlTableQueryBuilder tablespace(String name) {
+    public SqlDDLOracleQueryBuilder tablespace(String name) {
         if(!columns.isEmpty()) {
             buildColumns();
             sqlQuery.append(")");
@@ -83,7 +85,7 @@ public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQue
     }
 
     @Override
-    public SqlAsTableQueryBuilder as(SqlFinalBuilder query) {
+    public SqlDDLOracleQueryBuilder as(SqlFinalBuilder query) {
         sqlQuery.append("AS ").append(query.build());
         return this;
     }

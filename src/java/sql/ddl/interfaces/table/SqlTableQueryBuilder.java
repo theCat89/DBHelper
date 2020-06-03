@@ -2,15 +2,11 @@ package sql.ddl.interfaces.table;
 
 import sql.dml.interfaces.SqlFinalBuilder;
 
-public interface SqlTableQueryBuilder extends SqlFinalBuilder{
+public interface SqlTableQueryBuilder extends SqlAddInfoBuilder{
 
-    SqlTableQueryBuilder addColumn(String name, String type, String constraint);
+    SqlInColumnStructureBuilder addColumn(String name, String type, String constraint);
 
-    SqlTableQueryBuilder addColumn(String name, String type);
-
-    SqlTableQueryBuilder constraint(String expression);
-
-    SqlTableQueryBuilder tablespace(String name);
+    SqlInColumnStructureBuilder addColumn(String name, String type);
 
     SqlAsTableQueryBuilder as(SqlFinalBuilder query);
 }
