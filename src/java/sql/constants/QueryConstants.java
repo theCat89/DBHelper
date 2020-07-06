@@ -5,6 +5,8 @@ public interface QueryConstants {
     String SPACE = " ";
     String COMMA = ", ";
     String DOT = ".";
+    String RIGHT_PARENTHESIS = ")";
+    String LEFT_PARENTHESIS = "(";
 
     //ddl
     String CREATE = "CREATE ";

@@ -74,7 +74,7 @@ public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQue
             buildColumns();
             sqlQuery.append(SPACE);
         }
-        sqlQuery.append(CONSTRAINT).append(expression).append(")").append(SPACE);
+        sqlQuery.append(CONSTRAINT).append(expression).append(RIGHT_PARENTHESIS).append(SPACE);
         return this;
     }
 
@@ -83,7 +83,7 @@ public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQue
         throwNullOrEmptyException(name);
         if (!columns.isEmpty()) {
             buildColumns();
-            sqlQuery.append(")");
+            sqlQuery.append(RIGHT_PARENTHESIS);
         }
         sqlQuery.append(TABLESPACE).append(SPACE).append(name);
         return this;
@@ -99,12 +99,12 @@ public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQue
     public String build() {
         if (!columns.isEmpty()) {
             buildColumns();
-            sqlQuery.append(")");
+            sqlQuery.append(RIGHT_PARENTHESIS);
         }
         return sqlQuery.toString().trim();
     }
 
-    private void buildColumns() {
+    private void buildColumns(){
         sqlQuery.append("(");
         sqlQuery.append(columns.getFirst().getColumnQuery());
         ListIterator<ColumnDefinition> iterator = columns.listIterator(1);
