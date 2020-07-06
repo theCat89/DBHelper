@@ -12,6 +12,7 @@ import sql.dml.interfaces.SqlFinalBuilder;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+import static sql.checker.StringCheckers.throwNullOrEmptyException;
 import static sql.constants.QueryConstants.*;
 
 public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQueryBuilder,
@@ -23,12 +24,14 @@ public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQue
 
     @Override
     public SqlDDLOracleQueryBuilder table(String scheme, String table) {
+        throwNullOrEmptyException(scheme, table);
         sqlQuery.append(scheme).append(DOT).append(table).append(SPACE);
         return this;
     }
 
     @Override
     public SqlDDLOracleQueryBuilder table(String table) {
+        throwNullOrEmptyException(table);
         sqlQuery.append(TABLE).append(table).append(SPACE);
         return this;
     }
@@ -66,7 +69,8 @@ public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQue
 
     @Override
     public SqlDDLOracleQueryBuilder constraint(String expression) {
-        if(!columns.isEmpty()) {
+        throwNullOrEmptyException(expression);
+        if (!columns.isEmpty()) {
             buildColumns();
             sqlQuery.append(SPACE);
         }
@@ -76,7 +80,8 @@ public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQue
 
     @Override
     public SqlDDLOracleQueryBuilder tablespace(String name) {
-        if(!columns.isEmpty()) {
+        throwNullOrEmptyException(name);
+        if (!columns.isEmpty()) {
             buildColumns();
             sqlQuery.append(")");
         }
@@ -92,18 +97,18 @@ public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQue
 
     @Override
     public String build() {
-        if(!columns.isEmpty()) {
+        if (!columns.isEmpty()) {
             buildColumns();
             sqlQuery.append(")");
         }
         return sqlQuery.toString().trim();
     }
 
-    private void buildColumns(){
+    private void buildColumns() {
         sqlQuery.append("(");
         sqlQuery.append(columns.getFirst().getColumnQuery());
         ListIterator<ColumnDefinition> iterator = columns.listIterator(1);
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             ColumnDefinition next = iterator.next();
             sqlQuery.append(COMMA);
             sqlQuery.append(next.getColumnQuery());

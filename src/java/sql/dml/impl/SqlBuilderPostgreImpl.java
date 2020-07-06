@@ -8,7 +8,7 @@ import sql.operators.ComparisonOperators;
 
 import java.util.Arrays;
 
-import static java.util.stream.Stream.of;
+import static sql.checker.StringCheckers.*;
 import static sql.constants.QueryConstants.*;
 
 /**
@@ -20,11 +20,11 @@ public class SqlBuilderPostgreImpl implements SqlSelectBuilder, SqlFinalBuilder,
 
     public SqlBuilderPostgreImpl select(String... params) {
         sqlQuery.append(SELECT);
-        if (Arrays.asList(params).isEmpty()) {
+        if (params == null || Arrays.asList(params).isEmpty()) {
             sqlQuery.append(STAR);
             return this;
         }
-        of(params).reduce((String s1, String s2) -> s1 + COMMA + s2).ifPresent(sqlQuery::append);
+        removeNullorEmpty(params).reduce((String s1, String s2) -> s1 + COMMA + s2).ifPresent(sqlQuery::append);
         sqlQuery.append(SPACE);
         return this;
     }
@@ -33,17 +33,20 @@ public class SqlBuilderPostgreImpl implements SqlSelectBuilder, SqlFinalBuilder,
         return select();
     }
 
-    public SqlBuilderPostgreImpl from(String tableName){
+    public SqlBuilderPostgreImpl from(String tableName) {
+        throwNullOrEmptyException(tableName);
         sqlQuery.append(FROM).append(tableName).append(SPACE);
         return this;
     }
 
     public SqlFinalBuilder where(String clause) {
+        throwNullOrEmptyException(clause);
         sqlQuery.append(WHERE).append(clause);
         return this;
     }
 
     public SqlFinalBuilder where(String lValue, ComparisonOperators operator, String rValue) {
+        throwNullOrEmptyException(lValue, rValue);
         sqlQuery.append(WHERE).append(lValue).append(operator.getOperator()).append(rValue);
         return this;
     }
@@ -53,7 +56,7 @@ public class SqlBuilderPostgreImpl implements SqlSelectBuilder, SqlFinalBuilder,
         return this;
     }
 
-    public String build(){
+    public String build() {
         return sqlQuery.toString().trim();
     }
 }
