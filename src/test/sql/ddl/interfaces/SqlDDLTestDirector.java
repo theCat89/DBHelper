@@ -21,8 +21,15 @@ public class SqlDDLTestDirector {
                 ::build;
     }
 
+    static Callable<String> buildCreateTwoFieldTableByColumnBuilder(SqlDDLQueryBuilder builder){
+        return builder.create().table("my_table")
+                .addColumn("field1").type("NUMBER(5)").constraint("NOT NULL")
+                .addColumn("field2").type("NUMBER(10)")
+                ::build;
+    }
+
     static Callable<String> buildCreateOneFieldTableWithConstraint(SqlDDLQueryBuilder builder){
-        return builder.create().table("my_table").addColumn("field1","NUMBER(5)","NOT NULL").constraint("field1 PRIMARY KEY")::build;
+        return builder.create().table("my_table").addColumn("field1","NUMBER(5)","NOT NULL").tableConstraint("field1 PRIMARY KEY")::build;
     }
 
     static Callable<String> buildCreateAs(SqlDDLQueryBuilder builder){

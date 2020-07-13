@@ -4,23 +4,25 @@ import sql.ddl.interfaces.SqlAlterQueryBuilder;
 import sql.ddl.interfaces.SqlCreateQueryBuilder;
 import sql.ddl.interfaces.SqlDDLQueryBuilder;
 import sql.ddl.interfaces.SqlDropQueryBuilder;
+import sql.ddl.interfaces.column.SqlColumnBuilder;
+import sql.ddl.interfaces.column.SqlColumnMiddleBuilder;
 import sql.ddl.interfaces.table.SqlAsTableQueryBuilder;
 import sql.ddl.interfaces.table.SqlInColumnStructureBuilder;
 import sql.ddl.interfaces.table.SqlTableQueryBuilder;
 import sql.dml.interfaces.SqlFinalBuilder;
 
-import java.util.LinkedList;
-import java.util.ListIterator;
+import java.util.*;
 
 import static sql.checker.StringCheckers.throwNullOrEmptyException;
 import static sql.constants.QueryConstants.*;
 
 public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQueryBuilder,
         SqlCreateQueryBuilder, SqlAlterQueryBuilder, SqlDropQueryBuilder, SqlAsTableQueryBuilder,
-        SqlInColumnStructureBuilder {
+        SqlInColumnStructureBuilder, SqlColumnMiddleBuilder, SqlColumnBuilder {
 
     private StringBuilder sqlQuery;
-    private final LinkedList<ColumnDefinition> columns = new LinkedList<>();
+    private final List<ColumnDefinition> columns = new LinkedList<>();
+    private ColumnDefinition currentColumn = null;
 
     @Override
     public SqlDDLOracleQueryBuilder table(String scheme, String table) {
@@ -62,19 +64,36 @@ public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQue
     }
 
     @Override
+    public SqlDDLOracleQueryBuilder addColumn(String name) {
+        currentColumn = new ColumnDefinition(name);
+        return this;
+    }
+
+    @Override
     public SqlDDLOracleQueryBuilder addColumn(String name, String type) {
         columns.add(new ColumnDefinition(name, type));
         return this;
     }
 
     @Override
-    public SqlDDLOracleQueryBuilder constraint(String expression) {
+    public SqlDDLOracleQueryBuilder tableConstraint(String expression) {
         throwNullOrEmptyException(expression);
+        if(currentColumn!= null){
+            columns.add(currentColumn);
+            currentColumn = null;
+        }
         if (!columns.isEmpty()) {
             buildColumns();
             sqlQuery.append(SPACE);
         }
         sqlQuery.append(CONSTRAINT).append(expression).append(RIGHT_PARENTHESIS).append(SPACE);
+        return this;
+    }
+
+    public SqlDDLOracleQueryBuilder constraint(String constraint){
+        currentColumn.addConstraint(constraint);
+        columns.add(currentColumn);
+        currentColumn = null;
         return this;
     }
 
@@ -106,19 +125,22 @@ public class SqlDDLOracleQueryBuilder implements SqlDDLQueryBuilder, SqlTableQue
 
     private void buildColumns(){
         sqlQuery.append("(");
-        sqlQuery.append(columns.getFirst().getColumnQuery());
-        ListIterator<ColumnDefinition> iterator = columns.listIterator(1);
-        while (iterator.hasNext()) {
-            ColumnDefinition next = iterator.next();
-            sqlQuery.append(COMMA);
-            sqlQuery.append(next.getColumnQuery());
-        }
+        columns.stream()
+                .map(ColumnDefinition::getColumnQuery)
+                .reduce((String s1, String s2) -> s1 + COMMA + s2)
+                .ifPresent(sqlQuery::append);
         columns.clear();
     }
 
     @Override
     public SqlFinalBuilder withNoData() {
         sqlQuery.append(" WITH NO DATA");
+        return this;
+    }
+
+    @Override
+    public SqlDDLOracleQueryBuilder type(String type) {
+        currentColumn.addType(type);
         return this;
     }
 }

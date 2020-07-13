@@ -33,6 +33,11 @@ class SqlDDLQueryBuilderTest {
         validation("CREATE TABLE my_table AS SELECT * FROM your_table", SqlDDLTestDirector::buildCreateAs, new SqlDDLOracleQueryBuilder());
     }
 
+    @Test
+    public void testColumnBuilder(){
+        validation("CREATE TABLE my_table (field1 NUMBER(5) NOT NULL, field2 NUMBER(10))", SqlDDLTestDirector::buildCreateTwoFieldTable, new SqlDDLOracleQueryBuilder());
+    }
+
     public void validation(String str, SqlBuilderFunction<SqlDDLQueryBuilder> testingMethod, SqlDDLQueryBuilder testingBuilder){
         try {
             assertEquals(str, testingMethod.prepareSqlString(testingBuilder).call());

@@ -1,9 +1,9 @@
 package sql.ddl.impl;
 
-import sql.constants.ParametrizedExceptionMessages;
 import sql.exceptions.BadParamException;
 
-import static sql.constants.ParametrizedExceptionMessages.*;
+import static sql.constants.ParametrizedExceptionMessages.EMPTY_QUERY_PARAM;
+import static sql.constants.ParametrizedExceptionMessages.NULL_QUERY_PARAM;
 import static sql.constants.QueryConstants.SPACE;
 
 public class ColumnDefinition {
@@ -18,6 +18,10 @@ public class ColumnDefinition {
 
     public ColumnDefinition(String name, String type) {
         this(name, type, "");
+    }
+
+    public ColumnDefinition(String name) {
+        columnQuery = name;
     }
 
     public String getColumnQuery() {
@@ -35,9 +39,15 @@ public class ColumnDefinition {
             throw new BadParamException(String.format(EMPTY_QUERY_PARAM, "type"));
     }
 
-    private void addConstraint(String constraint) {
+    public void addConstraint(String constraint) {
         if (constraint == null || constraint.isEmpty())
             return;
         columnQuery += SPACE + constraint;
+    }
+
+    public void addType(String type) {
+        if (type == null || type.isEmpty())
+            return;
+        columnQuery += SPACE + type;
     }
 }
