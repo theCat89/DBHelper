@@ -23,6 +23,14 @@ public class SqlTestDirector {
         return builder.select("field1").from("tableName").where("field2 = 1")::build;
     }
 
+    static Callable<String> buildSimpleWhereOrStatement(SqlSelectBuilder builder) {
+        return builder.select("field1").from("tableName").where("field2 = 1").or("field2 = 2")::build;
+    }
+
+    static Callable<String> buildSimpleWhereAndStatement(SqlSelectBuilder builder) {
+        return builder.select("field1").from("tableName").where("field2 = 1").and("field2 = 2")::build;
+    }
+
     static Callable<String> buildWhereWithOperatorStatement(SqlSelectBuilder builder) {
         return builder.select("field1").from("tableName").where("field2", ComparisonOperators.equals, "1")::build;
     }

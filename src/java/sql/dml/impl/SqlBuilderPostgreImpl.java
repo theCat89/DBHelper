@@ -1,9 +1,6 @@
 package sql.dml.impl;
 
-import sql.dml.interfaces.SqlFinalBuilder;
-import sql.dml.interfaces.SqlFromBuilder;
-import sql.dml.interfaces.SqlSelectBuilder;
-import sql.dml.interfaces.SqlWhereBuilder;
+import sql.dml.interfaces.*;
 import sql.operators.ComparisonOperators;
 
 import java.util.Arrays;
@@ -14,7 +11,8 @@ import static sql.constants.QueryConstants.*;
 /**
  * Spaces on start, keywords - UPPER_CASE
  */
-public class SqlBuilderPostgreImpl implements SqlSelectBuilder, SqlFinalBuilder, SqlFromBuilder, SqlWhereBuilder {
+public class SqlBuilderPostgreImpl implements SqlSelectBuilder, SqlFinalBuilder, SqlFromBuilder, SqlWhereBuilder,
+        SqlJoinBuilder, SqlOnBuilder, SqlConditionBuilder {
 
     private final StringBuilder sqlQuery = new StringBuilder();
 
@@ -39,13 +37,13 @@ public class SqlBuilderPostgreImpl implements SqlSelectBuilder, SqlFinalBuilder,
         return this;
     }
 
-    public SqlFinalBuilder where(String clause) {
+    public SqlBuilderPostgreImpl where(String clause) {
         throwNullOrEmptyException(clause);
         sqlQuery.append(WHERE).append(clause);
         return this;
     }
 
-    public SqlFinalBuilder where(String lValue, ComparisonOperators operator, String rValue) {
+    public SqlBuilderPostgreImpl where(String lValue, ComparisonOperators operator, String rValue) {
         throwNullOrEmptyException(lValue, rValue);
         sqlQuery.append(WHERE).append(lValue).append(operator.getOperator()).append(rValue);
         return this;
@@ -53,6 +51,38 @@ public class SqlBuilderPostgreImpl implements SqlSelectBuilder, SqlFinalBuilder,
 
     public SqlFinalBuilder whereExists(SqlFinalBuilder query) {
         sqlQuery.append(WHERE).append(EXISTS).append(LEFT_PARENTHESIS).append(query.build()).append(RIGHT_PARENTHESIS);
+        return this;
+    }
+
+    public SqlBuilderPostgreImpl innerJoin(String tableName) {
+        sqlQuery.append(INNER_JOIN).append(LEFT_PARENTHESIS).append(tableName).append(RIGHT_PARENTHESIS);
+        return this;
+    }
+
+    public SqlOnBuilder innerJoin(SqlFinalBuilder query) {
+        sqlQuery.append(INNER_JOIN).append(LEFT_PARENTHESIS).append(query.build()).append(RIGHT_PARENTHESIS);
+        return this;
+    }
+
+    public SqlBuilderPostgreImpl or(String lValue, ComparisonOperators operator, String rValue) {
+        throwNullOrEmptyException(lValue, rValue);
+        sqlQuery.append(OR).append(lValue).append(operator.getOperator()).append(rValue);
+        return this;
+    }
+
+    public SqlBuilderPostgreImpl and(String lValue, ComparisonOperators operator, String rValue) {
+        throwNullOrEmptyException(lValue, rValue);
+        sqlQuery.append(AND).append(lValue).append(operator.getOperator()).append(rValue);
+        return this;
+    }
+
+    public SqlBuilderPostgreImpl or(String condition) {
+        sqlQuery.append(OR).append(condition);
+        return this;
+    }
+
+    public SqlBuilderPostgreImpl and(String condition) {
+        sqlQuery.append(AND).append(condition);
         return this;
     }
 

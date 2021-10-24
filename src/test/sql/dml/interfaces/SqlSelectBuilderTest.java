@@ -38,6 +38,11 @@ class SqlSelectBuilderTest {
         validation("SELECT * FROM table1 WHERE EXISTS (SELECT * FROM table2 WHERE field2 = 5)", SqlTestDirector::buildWhereExists, getPostgresSqlSelectBuilder());
     }
 
+    @Test
+    public void testWhereOr() {
+        validation("SELECT * FROM table1 WHERE EXISTS (SELECT * FROM table2 WHERE field2 = 5)", SqlTestDirector::buildWhereExists, getPostgresSqlSelectBuilder());
+    }
+
     public void validation(String str, SqlBuilderFunction<SqlSelectBuilder> testingMethod, SqlSelectBuilder testingBuilder){
         try {
             assertEquals(str, testingMethod.prepareSqlString(testingBuilder).call());

@@ -21,6 +21,9 @@ public interface QueryConstants {
     String STAR = "* ";
     String FROM = "FROM ";
     String WHERE = "WHERE ";
+    String OR = "OR ";
+    String AND = "AND ";
     String EXISTS = "EXISTS ";
+    String INNER_JOIN = "INNER JOIN ";
 
 }
