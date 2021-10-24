@@ -59,7 +59,7 @@ public class SqlBuilderPostgreImpl implements SqlSelectBuilder, SqlFinalBuilder,
         return this;
     }
 
-    public SqlOnBuilder innerJoin(SqlFinalBuilder query) {
+    public SqlBuilderPostgreImpl innerJoin(SqlFinalBuilder query) {
         sqlQuery.append(INNER_JOIN).append(LEFT_PARENTHESIS).append(query.build()).append(RIGHT_PARENTHESIS);
         return this;
     }
